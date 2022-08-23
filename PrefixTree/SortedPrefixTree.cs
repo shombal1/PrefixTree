@@ -1,9 +1,12 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace PrefixTree
 {
+
+
     public class knot
     {
         public SortedDictionary<char, knot> Child { get; set; } = new SortedDictionary<char, knot>();
@@ -83,6 +86,17 @@ namespace PrefixTree
                 RecursionMultiFind(word.Insert(word.Length, Convert.ToString(a.Key)), a.Value, strings);
             }
         }
+        private void RecursionMultiFind(in String word, knot Knot, BindingList<string> strings)
+        {
+            if (Knot.EndWord == true)
+            {
+                strings.Add(word);
+            }
+            foreach (var a in Knot.Child)
+            {
+                RecursionMultiFind(word.Insert(word.Length, Convert.ToString(a.Key)), a.Value, strings);
+            }
+        }
 
         public bool Add(String word)
         {
@@ -121,6 +135,7 @@ namespace PrefixTree
         {
             List<string> strings = new List<string>();
             knot LastKnot = root;
+
             for (int i = 0; i < BeginWord.Length; i++)
             {
                 try
@@ -134,6 +149,21 @@ namespace PrefixTree
             }
             RecursionMultiFind(BeginWord, LastKnot, strings);
             return strings;
+        }
+        public void SimilarWord(String BeginWord, BindingList<string> strings)
+        {
+            knot LastKnot = root;
+            for (int i = 0; i < BeginWord.Length; i++)
+            {
+                try
+                {
+                    LastKnot = LastKnot.Child[BeginWord[i]];
+                }
+                catch
+                {
+                }
+            }
+            RecursionMultiFind(BeginWord, LastKnot, strings);
         }
     }
 
